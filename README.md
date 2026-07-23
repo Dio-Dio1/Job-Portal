@@ -1,16 +1,33 @@
-# React + Vite
+# SkillGig 💼
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SkillGig is a modern job portal built with React. It aims to connect job seekers and recruiters through an intuitive platform where users can discover jobs, connect with recruiters, and engage with the community.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Modern landing page
+- Trending Jobs
+- Community Feed (WIP)
+- Statistics section
+- Responsive UI (WIP)
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- Tailwind CSS
+- Git & GitHub
 
-## Expanding the ESLint configuration
+## Roadmap
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- [x] Navbar
+- [x] Landing Page
+- [x] Trending Jobs
+- [x] Statistics
+- [ ] Community Feed
+- [ ] Footer
+- [ ] Authentication
+- [ ] Backend Integration
+
+## License
+
+This project is for learning and portfolio purposes.
