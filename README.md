@@ -23,7 +23,7 @@ SkillGig is a modern job portal built with React. It aims to connect job seekers
 - [x] Landing Page
 - [x] Trending Jobs
 - [x] Statistics
-- [ ] Community Feed
+- [x] Community Feed
 - [ ] Footer
 - [ ] Authentication
 - [ ] Backend Integration

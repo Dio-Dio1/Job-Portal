@@ -4,7 +4,8 @@ import { FaFacebookF, FaApple } from "react-icons/fa";
 
 const CommunityFeed = () => {
   return (
-    <div className="hidden lg:block p-20 bg-gray-50 min-h-screen">
+    <div className="flex">
+         <div className="hidden lg:block p-20 bg-gray-50 min-h-screen">
       <div className="w-full max-w-md bg-white border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-3xl p-10 min-h-[560px] flex flex-col items-center space-y-4">
         <h1 className="text-4xl font-bold tracking-tight leading-tight text-center text-gray-900">
           Ready to Register your{" "}
@@ -53,6 +54,11 @@ const CommunityFeed = () => {
         </p>
       </div>
     </div>
+        <div className="w-[910px] bg-red-200 flex items-center justify-center">
+            <h1 className="text-8xl">Community Feed:</h1>
+        </div>
+    </div>
+   
   );
 };
 
