@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import Landing from './components/Landing'
 import Trends from './components/TrendJobs'
 import Statistics from './components/Statistics'
+import CommunityFeed from './components/CommunityFeed'
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
       <Landing />
       <Trends />
       <Statistics />
+      <CommunityFeed />
     </div>
   )
 }
