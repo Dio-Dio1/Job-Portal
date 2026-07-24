@@ -43,74 +43,138 @@ const Trends = () => {
   ]);
 
   return (
-    <section className="px-8 lg:px-24 py-20 bg-gray-50">
-      <div className="mb-12">
-        <h1 className="text-5xl lg:text-6xl font-bold text-gray-900">
+    <section className="px-6 lg:px-20 py-16 bg-gray-50">
+
+      <div className="mb-10">
+
+        <h1 className="text-4xl lg:text-5xl font-bold text-gray-900">
           Trending Jobs Right Now
         </h1>
 
-        <p className="mt-3 text-lg text-gray-500 max-w-2xl">
+
+        <p className="mt-3 text-base lg:text-lg text-gray-500 max-w-2xl">
           Discover the latest opportunities from companies hiring this week.
         </p>
+
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+
+
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+
         {trendingJobs.map((job, index) => (
+
           <div
             key={index}
-            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
           >
+
+
             {/* Header */}
             <div className="flex items-start justify-between">
-              <div className="flex gap-4">
-                <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center">
+
+
+              <div className="flex gap-3">
+
+
+                <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center">
+
                   <img
                     src={job.logo}
                     alt={job.title}
-                    className="w-12 h-12 rounded-lg object-cover"
+                    className="w-11 h-11 rounded-lg object-cover"
                   />
+
                 </div>
 
+
+
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
+
+                  <h2 className="text-base font-semibold text-gray-900">
                     {job.title}
                   </h2>
+
 
                   <p className="text-sm text-green-600 font-medium mt-1">
                     {job.company}
                   </p>
+
                 </div>
+
+
               </div>
+
+
 
               <span className="text-xs text-gray-400 font-medium">
                 NEW
               </span>
+
+
             </div>
 
+
+
+
+
             {/* Description */}
-            <p className="mt-6 text-gray-600 leading-7 text-sm">
+            <p className="mt-5 text-gray-600 leading-6 text-sm">
               {job.description}
             </p>
 
+
+
+
+
             {/* Job Info */}
-            <div className="flex justify-between border-t border-gray-200 mt-6 pt-4 text-sm text-gray-500">
-              <span>{job.location}</span>
-              <span>{job.salary}</span>
+            <div className="flex justify-between border-t border-gray-200 mt-5 pt-3 text-sm text-gray-500">
+
+              <span>
+                {job.location}
+              </span>
+
+              <span>
+                {job.salary}
+              </span>
+
             </div>
+
+
+
+
 
             {/* Buttons */}
-            <div className="flex gap-3 mt-6">
-              <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-medium transition">
+            <div className="flex gap-3 mt-5">
+
+
+              <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-xl font-medium transition">
+
                 Apply
+
               </button>
 
-              <button className="px-5 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
+
+
+              <button className="px-4 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
+
                 Details
+
               </button>
+
+
             </div>
+
+
           </div>
+
         ))}
+
+
       </div>
+
+
     </section>
   );
 };
