@@ -4,6 +4,7 @@ import Landing from './components/Landing'
 import Trends from './components/TrendJobs'
 import Statistics from './components/Statistics'
 import CommunityFeed from './components/CommunityFeed'
+import AuthPage from './components/AuthPage'
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <Trends />
       <Statistics />
       <CommunityFeed />
+      <AuthPage />
     </div>
   )
 }
