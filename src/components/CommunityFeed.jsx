@@ -97,7 +97,7 @@ const CommunityFeed = () => {
   };
 
   return (
-    <div className="min-h-screen bg-emerald-50/30 flex justify-center py-10 px-4 sm:px-6 lg:px-8">
+    <div id="community" className="min-h-screen bg-emerald-50/30 flex justify-center py-10 px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col lg:flex-row gap-8 max-w-7xl w-full items-start">
         
         {/* Left Sidebar / Auth Box */}
