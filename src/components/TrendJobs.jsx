@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import butterfly from "../assets/logos/butterfly.jpg";
 import bird from "../assets/logos/bird.jpg";
+import { useNavigate } from "react-router-dom";
 
 const Trends = () => {
+
+    const apply = useNavigate();
+  
   const [trendingJobs] = useState([
     {
       logo: butterfly,
@@ -149,7 +153,9 @@ const Trends = () => {
             <div className="flex gap-3 mt-5">
 
 
-              <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-xl font-medium transition">
+              <button 
+              onClick={()=>{apply("/apply")}}
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-xl font-medium transition">
 
                 Apply
 
