@@ -1,53 +1,13 @@
-import React, { useState } from "react";
-import butterfly from "../assets/logos/butterfly.jpg";
-import bird from "../assets/logos/bird.jpg";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { mockJobs } from "../data/mockJobs";
 
 const Trends = () => {
-
-    const apply = useNavigate();
-  
-  const [trendingJobs] = useState([
-    {
-      logo: butterfly,
-      title: "Software Engineer",
-      company: "Butterfly Technologies",
-      location: "Remote",
-      salary: "$120k - $150k",
-      description:
-        "Build scalable software solutions using modern technologies.",
-    },
-    {
-      logo: bird,
-      title: "Hardware Engineer",
-      company: "Bird Labs",
-      location: "Hybrid",
-      salary: "$95k - $130k",
-      description:
-        "Design and develop next-generation embedded hardware systems.",
-    },
-    {
-      logo: butterfly,
-      title: "CottonCandy Engineer",
-      company: "SweetWorks",
-      location: "On-site",
-      salary: "$80k - $110k",
-      description:
-        "Create innovative candy production systems for global markets.",
-    },
-    {
-      logo: bird,
-      title: "Cement Engineer",
-      company: "SolidBuild",
-      location: "Remote",
-      salary: "$90k - $120k",
-      description:
-        "Develop durable construction materials for future infrastructure.",
-    },
-  ]);
+  const navigate = useNavigate();
+  const [trendingJobs] = useState(mockJobs);
 
   return (
-    <section className="px-6 lg:px-20 py-16 bg-gray-50">
+    <section id="trending" className="px-6 lg:px-20 py-16 bg-gray-50">
 
       <div className="mb-10">
 
@@ -67,10 +27,10 @@ const Trends = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
 
-        {trendingJobs.map((job, index) => (
+        {trendingJobs.map((job) => (
 
           <div
-            key={index}
+            key={job.id}
             className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
           >
 
@@ -154,7 +114,7 @@ const Trends = () => {
 
 
               <button 
-              onClick={()=>{apply("/apply")}}
+              onClick={() => navigate("/apply")}
               className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-xl font-medium transition">
 
                 Apply
@@ -163,7 +123,10 @@ const Trends = () => {
 
 
 
-              <button className="px-4 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
+              <button
+                onClick={() => navigate(`/jobs/${job.id}`)}
+                className="px-4 border border-gray-300 rounded-xl hover:bg-gray-100 transition"
+              >
 
                 Details
 

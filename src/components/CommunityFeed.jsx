@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF, FaApple } from "react-icons/fa";
-import { FiTrendingUp, FiMessageSquare, FiShare2, FiPlus, FiChevronDown } from "react-icons/fi";
+import { 
+  FiTrendingUp, 
+  FiMessageSquare, 
+  FiShare2, 
+  FiPlus, 
+  FiChevronDown, 
+  FiX, 
+  FiImage 
+} from "react-icons/fi";
 
 import pfp1 from "../assets/users/pfp1.jpg";
 import pfp2 from "../assets/users/pfp2.jpg";
@@ -10,6 +18,13 @@ import post1 from "../assets/posts/post1.jpg";
 import post2 from "../assets/posts/post2.jpg";
 
 const CommunityFeed = () => {
+  // Toggle form visibility
+  const [isPosting, setIsPosting] = useState(false);
+
+  // Form input states
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
   const posts = [
     {
       id: 1,
@@ -73,11 +88,19 @@ const CommunityFeed = () => {
     },
   ];
 
+  const handlePostSubmit = (e) => {
+    e.preventDefault();
+    // Handle post logic here (API call / state update)
+    setTitle("");
+    setDescription("");
+    setIsPosting(false);
+  };
+
   return (
     <div className="min-h-screen bg-emerald-50/30 flex justify-center py-10 px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col lg:flex-row gap-8 max-w-7xl w-full items-start">
         
-        {/* Left Sidebar / Auth Box (Hidden on Mobile/Tablet, visible on lg screens) */}
+        {/* Left Sidebar / Auth Box */}
         <aside className="hidden lg:block lg:w-[380px] lg:sticky lg:top-10 shrink-0">
           <div className="w-full bg-white border border-emerald-100/60 shadow-sm hover:shadow-md transition-shadow duration-300 rounded-3xl p-8 flex flex-col items-center space-y-5">
             <h1 className="text-3xl font-bold tracking-tight text-center text-gray-900 leading-snug">
@@ -134,11 +157,77 @@ const CommunityFeed = () => {
               </p>
             </div>
 
-            <button className="flex items-center gap-2 px-5 py-2.5 bg-white text-emerald-800 hover:bg-emerald-50 rounded-full font-semibold text-sm shadow-xs transition-colors cursor-pointer shrink-0">
-              <FiPlus className="text-base" />
-              Create
+            <button 
+              onClick={() => setIsPosting(!isPosting)}
+              className="flex items-center gap-2 px-5 py-2.5 bg-white text-emerald-800 hover:bg-emerald-50 rounded-full font-semibold text-sm shadow-xs transition-colors cursor-pointer shrink-0"
+            >
+              {isPosting ? <FiX className="text-base" /> : <FiPlus className="text-base" />}
+              {isPosting ? "Cancel" : "Create"}
             </button>
           </div>
+
+          {/* Inline Create Post Form (Renders directly inside the feed space when clicked) */}
+          {isPosting && (
+            <div className="w-full bg-white border border-emerald-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4 animate-in fade-in duration-200">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                <h2 className="text-lg font-semibold text-gray-900">Create a Community Post</h2>
+                <button 
+                  onClick={() => setIsPosting(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                >
+                  <FiX className="text-xl" />
+                </button>
+              </div>
+
+              <form onSubmit={handlePostSubmit} className="space-y-4">
+                <div>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Post Title..."
+                    className="w-full text-base font-semibold text-gray-900 placeholder-gray-400 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="What's on your mind? Share updates, ask questions..."
+                    rows={4}
+                    className="w-full text-sm text-gray-700 placeholder-gray-400 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none"
+                    required
+                  />
+                </div>
+
+                <div className="flex items-center justify-between pt-2">
+                  <label className="flex items-center gap-2 px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-xl text-xs font-semibold text-gray-600 cursor-pointer transition-colors">
+                    <FiImage className="text-base text-emerald-700" />
+                    <span>Add Photo</span>
+                    <input type="file" className="hidden" accept="image/*" />
+                  </label>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setIsPosting(false)}
+                      className="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-semibold transition-colors cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-sm font-semibold transition-colors cursor-pointer"
+                    >
+                      Post
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          )}
 
           {/* Posts List */}
           <div className="space-y-6">
@@ -175,7 +264,7 @@ const CommunityFeed = () => {
                   </p>
                 </div>
 
-                {/* Post Image (Only renders if available) */}
+                {/* Post Image */}
                 {post.image && (
                   <div className="overflow-hidden rounded-2xl border border-gray-100">
                     <img
@@ -186,10 +275,9 @@ const CommunityFeed = () => {
                   </div>
                 )}
 
-                {/* Action Bar (Elevate, Comment, Share) */}
+                {/* Action Bar */}
                 <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                   <div className="flex items-center gap-2">
-                    {/* Elevate Button */}
                     <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 text-emerald-800 hover:bg-emerald-100 text-xs font-semibold transition-colors cursor-pointer">
                       <FiTrendingUp className="text-sm text-emerald-700" />
                       <span>Elevate</span>
@@ -198,7 +286,6 @@ const CommunityFeed = () => {
                       </span>
                     </button>
 
-                    {/* Comment Button */}
                     <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs font-medium transition-colors cursor-pointer">
                       <FiMessageSquare className="text-sm text-gray-500" />
                       <span>Comment</span>
@@ -206,7 +293,6 @@ const CommunityFeed = () => {
                     </button>
                   </div>
 
-                  {/* Share Button */}
                   <button className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-gray-600 hover:bg-gray-100 text-xs font-medium transition-colors cursor-pointer">
                     <FiShare2 className="text-sm text-gray-500" />
                     <span className="hidden sm:inline">Share</span>
