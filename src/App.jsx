@@ -13,6 +13,7 @@ import CompanyProfile from "./components/CompanyProfile";
 import JobSeekerDashboard from "./components/JobSeekerDashboard";
 import EmployerDashboard from "./components/EmployerDashboard";
 import NotFound from "./components/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { Routes, Route } from "react-router-dom";
 
 const HomePage = () => (
@@ -30,15 +31,26 @@ const App = () => {
       <Navbar />
       <main className="flex-1">
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<AuthPage />} />
-          <Route path="/apply" element={<JobApplicationForm />} />
           <Route path="/jobs/:id" element={<JobDetails />} />
-          <Route path="/profile" element={<JobSeekerProfile />} />
           <Route path="/company/:id" element={<CompanyProfile />} />
-          <Route path="/dashboard" element={<JobSeekerDashboard />} />
-          <Route path="/employer/dashboard" element={<EmployerDashboard />} />
-          <Route path="/jobposting" element={<CreateJobPost />} />
+
+          {/* Job Seeker Protected Routes */}
+          <Route element={<ProtectedRoute allowedRoles={["jobseeker"]} />}>
+            <Route path="/dashboard" element={<JobSeekerDashboard />} />
+            <Route path="/profile" element={<JobSeekerProfile />} />
+            <Route path="/apply" element={<JobApplicationForm />} />
+          </Route>
+
+          {/* Company/Employer Protected Routes */}
+          <Route element={<ProtectedRoute allowedRoles={["company"]} />}>
+            <Route path="/employer/dashboard" element={<EmployerDashboard />} />
+            <Route path="/jobposting" element={<CreateJobPost />} />
+          </Route>
+
+          {/* 404 Catch All */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
@@ -46,5 +58,6 @@ const App = () => {
     </div>
   );
 };
+
 
 export default App;

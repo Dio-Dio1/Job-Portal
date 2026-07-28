@@ -1,0 +1,23 @@
+[33m26ae633[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Updated navbar
+[33m9c35964[m Implemented Authentication context
+[33m46d8fb5[m Update project roadmap in README
+[33mb7ec895[m Add mobile navbar drawer with overlay and working nav links.
+[33mfed4a08[m Add UI shells for job details, profiles, dashboards, and footer.
+[33mf42b52d[m Clean up app routing and add a 404 fallback page.
+[33m4376a68[m User can now upload their file in the form
+[33m1d2175c[m Added form application section for jobs when clicked 'apply'
+[33m816f1f3[m Add React Router Navigation Setup
+[33m843708a[m Designed the login/signup page
+[33m5652a28[m Created main community post design
+[33m35d0dec[m Section for main community feed seperated
+[33m1ea9211[m Designed the special login part with react-icons
+[33m704cff6[m Improve hero layout for desktop viewport
+[33mb43d55e[m Add project README and roadmap
+[33me8681f2[m Added Statistics Design
+[33m5d28248[m Trending Jobs Section
+[33m4d40dec[m Polished hero section with responsiveness
+[33m40c0a70[m Implemented landing page hero section
+[33m762c30e[m Made the navbar better + semi-responsive
+[33mf4b935e[m Completed basic navbar structure
+[33mb57d70e[m Initial Vite Setup
+[33mc5c680f[m Initial commit
