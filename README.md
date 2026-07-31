@@ -1,3 +1,8 @@
+## Project Status
+This project is currently being rebuilt from an earlier milestone to achieve the MVP structure.
+The previous implementation has been preserved in the `archive/full-feature` branch.
+Current development continues on the `rebuild-from-here` branch with the goal of implementing each feature simply.
+
 # SkillGig 💼
 
 SkillGig is a modern job portal built with React. It aims to connect job seekers and recruiters through an intuitive platform where users can discover jobs, connect with recruiters, and engage with the community.
@@ -17,13 +22,15 @@ SkillGig is a modern job portal built with React. It aims to connect job seekers
 - Tailwind CSS
 - Git & GitHub
 
+## Backend
+- Flexible
+
 ## Roadmap
 
 - [x] Navbar
 - [x] Landing Page
 - [x] Trending Jobs
 - [x] Statistics
-- [x] Community Feed
 - [ ] Footer
 - [ ] Authentication
 - [ ] Backend Integration
