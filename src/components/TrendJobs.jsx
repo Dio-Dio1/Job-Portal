@@ -1,46 +1,7 @@
-import React, { useState } from "react";
-import butterfly from "../assets/logos/butterfly.jpg";
-import bird from "../assets/logos/bird.jpg";
+import trendingJobs from "../data/jobs"
 
 const Trends = ({title, location}) => {
-  const trendingJobs = [
-    {
-      logo: butterfly,
-      title: "Software Engineer",
-      company: "Butterfly Technologies",
-      location: "Remote",
-      salary: "$120k - $150k",
-      description:
-        "Build scalable software solutions using modern technologies.",
-    },
-    {
-      logo: bird,
-      title: "Hardware Engineer",
-      company: "Bird Labs",
-      location: "Hybrid",
-      salary: "$95k - $130k",
-      description:
-        "Design and develop next-generation embedded hardware systems.",
-    },
-    {
-      logo: butterfly,
-      title: "CottonCandy Engineer",
-      company: "SweetWorks",
-      location: "On-site",
-      salary: "$80k - $110k",
-      description:
-        "Create innovative candy production systems for global markets.",
-    },
-    {
-      logo: bird,
-      title: "Cement Engineer",
-      company: "SolidBuild",
-      location: "Remote",
-      salary: "$90k - $120k",
-      description:
-        "Develop durable construction materials for future infrastructure.",
-    },
-  ];
+  
 
   const filteredJobs = trendingJobs.filter((job)=>{
     const titleMatch = job.title.toLowerCase().includes(title.toLowerCase())
@@ -71,10 +32,10 @@ const Trends = ({title, location}) => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
         
-        {filteredJobs.map((job, index) => (
+        {filteredJobs.map((job) => (
 
           <div
-            key={index}
+            key={job.id}
             className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
           >
 
