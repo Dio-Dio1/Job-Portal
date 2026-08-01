@@ -1,7 +1,10 @@
-import React from 'react'
+import {React,useState} from 'react'
 import jobguy from '../assets/jobguy.png'
 
 const Landing = () => {
+
+  const [title, setTitle] = useState("")
+  const [location, setLocation] = useState("")
   return (
     <div className='min-h-96 mt-3 px-5 md:px-10 lg:px-28 w-full flex flex-col lg:flex-row justify-between items-center rounded-2xl bg-gradient-to-br from-white via-green-50 to-white shadow-md overflow-hidden relative'>
 
@@ -32,16 +35,23 @@ const Landing = () => {
           <input
             className='px-5 py-3 flex-1 outline-none border-b sm:border-b-0 sm:border-r border-gray-200'
             placeholder='Job Title'
+            value={title}
+            onChange={(e)=>{setTitle(e.target.value)}}
+            
           />
 
 
           <input
             className='px-5 py-3 flex-1 outline-none'
             placeholder='Location'
+            value={location}
+            onChange={(e)=>{setLocation(e.target.value)}}
           />
 
 
-          <button className='m-2 px-7 py-2.5 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition'>
+          <button className='m-2 px-7 py-2.5 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition'
+          onClick={()=>{console.log(title, location)}}
+          >
             Search
           </button>
 
