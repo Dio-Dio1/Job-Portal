@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import butterfly from "../assets/logos/butterfly.jpg";
 import bird from "../assets/logos/bird.jpg";
 
-const Trends = () => {
-  const [trendingJobs] = useState([
+const Trends = ({title, location}) => {
+  const trendingJobs = [
     {
       logo: butterfly,
       title: "Software Engineer",
@@ -40,7 +40,15 @@ const Trends = () => {
       description:
         "Develop durable construction materials for future infrastructure.",
     },
-  ]);
+  ];
+
+  const filteredJobs = trendingJobs.filter((job)=>{
+    const titleMatch = job.title.toLowerCase().includes(title.toLowerCase())
+    const locationMatch = job.location.toLowerCase().includes(location.toLowerCase())
+    return titleMatch && locationMatch
+  })
+
+  
 
   return (
     <section className="px-6 lg:px-20 py-16 bg-gray-50">
@@ -62,8 +70,8 @@ const Trends = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
-
-        {trendingJobs.map((job, index) => (
+        
+        {filteredJobs.map((job, index) => (
 
           <div
             key={index}

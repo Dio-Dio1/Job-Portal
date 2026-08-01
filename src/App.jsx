@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import Navbar from './components/Navbar'
 import Landing from './components/Landing'
 import Trends from './components/TrendJobs'
@@ -7,6 +7,8 @@ import AuthPage from './components/AuthPage'
 import { Routes, Route } from "react-router-dom";
 
 const App = () => {
+  const [title, setTitle] = useState("")
+  const [location, setLocation] = useState("")
   return (
     
       <div>
@@ -15,8 +17,8 @@ const App = () => {
       <Route path="/"
       element={
         <>
-          <Landing />
-          <Trends />
+          <Landing title={title} location={location} setTitle={setTitle} setLocation={setLocation}/>
+          <Trends title={title} location={location}/>
           <Statistics />
         </>
       }

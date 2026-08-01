@@ -1,10 +1,9 @@
-import {React,useState} from 'react'
+import {React} from 'react'
 import jobguy from '../assets/jobguy.png'
 
-const Landing = () => {
+const Landing = ({setLocation, setTitle, title, location}) => {
 
-  const [title, setTitle] = useState("")
-  const [location, setLocation] = useState("")
+  
   return (
     <div className='min-h-96 mt-3 px-5 md:px-10 lg:px-28 w-full flex flex-col lg:flex-row justify-between items-center rounded-2xl bg-gradient-to-br from-white via-green-50 to-white shadow-md overflow-hidden relative'>
 
