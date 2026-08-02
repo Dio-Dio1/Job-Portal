@@ -5,6 +5,7 @@ import Trends from './components/TrendJobs'
 import Statistics from './components/Statistics'
 import AuthPage from './components/AuthPage'
 import { Routes, Route } from "react-router-dom";
+import Jobdetails from './components/Jobdetails'
 
 const App = () => {
   const [title, setTitle] = useState("")
@@ -31,9 +32,14 @@ const App = () => {
       }
 
       />
+
+      <Route path="/jobs/:id" element={<>
+        <Jobdetails />
+      </>}
+      />
         
       
-    </Routes>
+    </Routes> 
     </div>
   )
 }

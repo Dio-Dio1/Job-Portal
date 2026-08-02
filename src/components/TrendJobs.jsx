@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import trendingJobs from "../data/jobs"
 
 const Trends = ({title, location}) => {
@@ -9,7 +10,7 @@ const Trends = ({title, location}) => {
     return titleMatch && locationMatch
   })
 
-  
+  const navigate = useNavigate();
 
   return (
     <section className="px-6 lg:px-20 py-16 bg-gray-50">
@@ -126,7 +127,9 @@ const Trends = ({title, location}) => {
 
 
 
-              <button className="px-4 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
+              <button className="px-4 border border-gray-300 rounded-xl hover:bg-gray-100 transition"
+                onClick={()=> navigate(`/jobs/${job.id}`)}
+              >
 
                 Details
 
