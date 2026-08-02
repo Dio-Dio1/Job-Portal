@@ -38,7 +38,8 @@ const App = () => {
       </>}
       />
         
-      
+      <Route path="*" element={<Jobdetails />}
+      />
     </Routes> 
     </div>
   )
