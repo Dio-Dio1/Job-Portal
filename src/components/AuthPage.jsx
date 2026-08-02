@@ -23,6 +23,48 @@ export default function AuthPage() {
     setFormData({...formData, [e.target.name]: e.target.value})
   }
 
+
+  const validation = ()=>{
+    const errors = [];
+
+
+    if(!isLogin && !formData.name.trim()){
+      errors.push("Name is required.")
+    }
+
+
+    if(!formData.email.trim()){
+      errors.push("Email is required")
+    }else if(!formData.email.includes("@")){
+      errors.push("Please enter a valid email address");
+    }
+
+    if(!formData.password){
+      errors.push("Password is required")
+    }else if(formData.password.length < 6){
+      errors.push("Password must have more than 6 characters");
+    }
+
+    return errors
+  }
+
+  const handleSubmit = (e)=>{
+    e.preventDefault();
+    const errors = validation()
+    
+
+    if(errors.length>0){
+      alert(errors.join("\n"));
+      return;
+    }
+
+    console.log("Form submitted")
+  }
+
+  const switchMode = (mode)=>{
+    setIsLogin(mode)
+    setFormData({name: "", email: "", password: ""})
+  }
   return (
     <div className="min-h-screen bg-[#f3f6f3] flex items-center justify-center p-5">
 
@@ -89,7 +131,7 @@ export default function AuthPage() {
             <div className="bg-gray-100 rounded-full p-1">
 
               <button
-                onClick={() => setIsLogin(true)}
+                onClick={() => {setIsLogin(true); switchMode(true)}}
                 className={`px-5 py-2 rounded-full ${
                   isLogin
                     ? "bg-green-600 text-white"
@@ -101,7 +143,8 @@ export default function AuthPage() {
 
 
               <button
-                onClick={() => setIsLogin(false)}
+                onClick={() => {setIsLogin(false); switchMode(false)}}
+                
                 className={`px-5 py-2 rounded-full ${
                   !isLogin
                     ? "bg-green-600 text-white"
@@ -132,7 +175,7 @@ export default function AuthPage() {
 
 
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
 
 
             {!isLogin && (
@@ -204,6 +247,7 @@ export default function AuthPage() {
 
             <button
               className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold"
+              type="submit"
             >
               {isLogin ? "Login" : "Create Account"}
             </button>
