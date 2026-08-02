@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   FaBriefcase,
   FaUser,
-  FaBuilding,
   FaEnvelope,
   FaLock,
   FaEye,
@@ -13,7 +12,16 @@ import { FcGoogle } from "react-icons/fc";
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState("jobseeker");
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: ""
+  })
+
+  const handleChange = (e) =>{
+    setFormData({...formData, [e.target.name]: e.target.value})
+  }
 
   return (
     <div className="min-h-screen bg-[#f3f6f3] flex items-center justify-center p-5">
@@ -41,6 +49,7 @@ export default function AuthPage() {
             Find your next opportunity.
           </h2>
 
+
           <p className="text-gray-300 mt-3">
             Connect with companies, discover jobs,
             and grow your career.
@@ -67,6 +76,7 @@ export default function AuthPage() {
           </div>
 
         </div>
+
 
 
         {/* FORM SIDE */}
@@ -106,9 +116,11 @@ export default function AuthPage() {
           </div>
 
 
+
           <h2 className="text-2xl font-bold text-gray-900 text-center">
             {isLogin ? "Welcome back" : "Create account"}
           </h2>
+
 
 
           <p className="text-center text-gray-500 text-sm mt-2 mb-6">
@@ -116,6 +128,7 @@ export default function AuthPage() {
               ? "Login to continue to SkillGig"
               : "Join SkillGig today"}
           </p>
+
 
 
 
@@ -129,6 +142,9 @@ export default function AuthPage() {
                 <FaUser className="absolute left-4 top-3.5 text-gray-400"/>
 
                 <input
+                name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="Full name"
                   className="w-full border rounded-xl py-3 pl-11 outline-none focus:ring-2 focus:ring-green-500"
                 />
@@ -139,12 +155,17 @@ export default function AuthPage() {
 
 
 
+
             <div className="relative">
 
               <FaEnvelope className="absolute left-4 top-3.5 text-gray-400"/>
 
               <input
+                onChange={handleChange}
+                name="email"
+                value={formData.email}
                 placeholder="Email address"
+                type="email"
                 className="w-full border rounded-xl py-3 pl-11 outline-none focus:ring-2 focus:ring-green-500"
               />
 
@@ -158,6 +179,9 @@ export default function AuthPage() {
               <FaLock className="absolute left-4 top-3.5 text-gray-400"/>
 
               <input
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 className="w-full border rounded-xl py-3 pl-11 pr-11 outline-none focus:ring-2 focus:ring-green-500"
@@ -177,71 +201,16 @@ export default function AuthPage() {
 
 
 
-            {!isLogin && (
 
-              <div>
-
-                <p className="font-medium text-gray-700 mb-2">
-                  Join as
-                </p>
-
-
-                <div className="grid grid-cols-2 gap-3">
-
-
-                  <button
-                    type="button"
-                    onClick={() => setRole("jobseeker")}
-                    className={`border rounded-xl p-3 ${
-                      role === "jobseeker"
-                        ? "border-green-600 bg-green-50"
-                        : ""
-                    }`}
-                  >
-
-                    <FaUser className="mx-auto text-green-600"/>
-
-                    <p className="text-sm font-semibold mt-2">
-                      Job Seeker
-                    </p>
-
-                  </button>
-
-
-
-                  <button
-                    type="button"
-                    onClick={() => setRole("company")}
-                    className={`border rounded-xl p-3 ${
-                      role === "company"
-                        ? "border-green-600 bg-green-50"
-                        : ""
-                    }`}
-                  >
-
-                    <FaBuilding className="mx-auto text-green-600"/>
-
-                    <p className="text-sm font-semibold mt-2">
-                      Company
-                    </p>
-
-                  </button>
-
-
-                </div>
-
-              </div>
-
-            )}
-
-
-
-            <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold">
+            <button
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold"
+            >
               {isLogin ? "Login" : "Create Account"}
             </button>
 
 
           </form>
+
 
 
 
@@ -261,13 +230,18 @@ export default function AuthPage() {
 
 
 
-          <button className="w-full border rounded-xl py-3 flex justify-center items-center gap-2 hover:bg-gray-50">
+
+          <button
+            className="w-full border rounded-xl py-3 flex justify-center items-center gap-2 hover:bg-gray-50"
+          >
 
             <FcGoogle size={22}/>
 
             Continue with Google
 
           </button>
+
+
 
 
 
@@ -287,11 +261,11 @@ export default function AuthPage() {
 
           </p>
 
-
         </div>
 
       </div>
 
     </div>
+    
   );
 }
