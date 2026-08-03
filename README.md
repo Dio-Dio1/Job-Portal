@@ -1,40 +1,51 @@
-## Project Status
-This project is currently being rebuilt from an earlier milestone to achieve the MVP structure.
-The previous implementation has been preserved in the `archive/full-feature` branch.
-Current development continues on the `rebuild-from-here` branch with the goal of implementing each feature simply.
-
 # SkillGig 💼
 
-SkillGig is a modern job portal built with React. It aims to connect job seekers and recruiters through an intuitive platform where users can discover jobs, connect with recruiters, and engage with the community.
+A job portal built with React as a learning project. Focused on understanding React fundamentals by building each feature from scratch.
+
+## Project Status
+
+Actively being built. Currently on the `rebuild-from-here` branch, implementing the MVP feature by feature with a focus on understanding React concepts rather than shipping fast. Previous implementation preserved in `archive/full-feature`.
 
 ## Features
 
-- Modern landing page
-- Trending Jobs
-- Community Feed (WIP)
+- Landing page with live search (controlled inputs)
+- Trending jobs with real-time title and location filtering
+- Job detail pages with dynamic routing (`/jobs/:id`)
 - Statistics section
-- Responsive UI (WIP)
+- Auth page with form validation (controlled form, error states)
+- Client-side routing with React Router
 
 ## Tech Stack
 
-- React
+- React 19
 - Vite
 - Tailwind CSS
-- Git & GitHub
+- React Router DOM
+- React Icons
 
-## Backend
-- Flexible
+## React Concepts Covered So Far
+
+- Functional components and JSX
+- useState and controlled inputs
+- Props and one-way data flow
+- Lifting state up
+- Component composition
+- Array methods in JSX (.map, .filter, .find)
+- Dynamic routing with useParams
+- Programmatic navigation with useNavigate
+- Form validation and error state
 
 ## Roadmap
 
-- [x] Navbar
-- [x] Landing Page
-- [x] Trending Jobs
-- [x] Statistics
-- [ ] Footer
-- [ ] Authentication
-- [ ] Backend Integration
+- [x] Navbar with routing
+- [x] Landing page with search
+- [x] Trending jobs with filtering
+- [x] Job detail page
+- [x] Statistics section
+- [x] Auth form with validation
+- [ ] Global auth state with Context
+- [ ] Protected routes
+- [ ] Job posting form
+- [ ] Mobile menu
+- [ ] Backend integration
 
-## License
-
-This project is for learning and portfolio purposes.
