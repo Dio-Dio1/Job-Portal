@@ -6,42 +6,48 @@ import Statistics from './components/Statistics'
 import AuthPage from './components/AuthPage'
 import { Routes, Route } from "react-router-dom";
 import Jobdetails from './components/Jobdetails'
+import Footer from './components/Footer'
+import NotFound from './components/NotFound'
 
 const App = () => {
   const [title, setTitle] = useState("")
   const [location, setLocation] = useState("")
   return (
     
-      <div>
-        <Navbar />
-    <Routes>
-      <Route path="/"
-      element={
-        <>
-          <Landing title={title} location={location} setTitle={setTitle} setLocation={setLocation}/>
-          <Trends title={title} location={location}/>
-          <Statistics />
-        </>
-      }
-      />
+      <div className="flex flex-col min-h-screen justify-between bg-gray-50">
+        <div>
+          <Navbar />
+          <Routes>
+            <Route path="/"
+            element={
+              <>
+                <Landing title={title} location={location} setTitle={setTitle} setLocation={setLocation}/>
+                <Trends title={title} location={location}/>
+                <Statistics />
+              </>
+            }
+            />
 
-      <Route path="/auth" element={
-        <>
-          <AuthPage />
-        </>
-      }
+            <Route path="/auth" element={
+              <>
+                <AuthPage />
+              </>
+            }
 
-      />
+            />
 
-      <Route path="/jobs/:id" element={<>
-        <Jobdetails />
-      </>}
-      />
-        
-      <Route path="*" element={<Jobdetails />}
-      />
-    </Routes> 
-    </div>
+            <Route path="/jobs/:id" element={
+              <>
+                <Jobdetails />
+              </>
+            }
+            />
+              
+            <Route path="*" element={<NotFound />} />
+          </Routes> 
+        </div>
+        <Footer />
+      </div>
   )
 }
 
