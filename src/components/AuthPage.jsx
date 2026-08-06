@@ -9,14 +9,13 @@ import {
   FaEye,
   FaEyeSlash,
 } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, signup } = useAuth();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -50,7 +49,7 @@ export default function AuthPage() {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const errors = validation();
@@ -60,18 +59,19 @@ export default function AuthPage() {
       return;
     }
 
-    const userData = {
-      name: isLogin
-        ? formData.email.split("@")[0]
-        : formData.name,
-      email: formData.email,
-    };
-
-    login(userData);
-
-    console.log("Form submitted");
-
-    navigate("/");
+    try {
+      if (isLogin) {
+        await login(formData.email, formData.password);
+      } else {
+        await signup(formData.email, formData.password, formData.name);
+        alert("Registration successful! Please log in.");
+        setIsLogin(true);
+        return;
+      }
+      navigate("/");
+    } catch (error) {
+      alert(error.message || "An authentication error occurred.");
+    }
   };
 
   const switchMode = (mode) => {
@@ -81,23 +81,15 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-[#f3f6f3] flex items-center justify-center p-5">
-
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg overflow-hidden grid md:grid-cols-2">
-
+        
         {/* BRAND SIDE */}
-
         <div className="bg-green-700 p-8 flex flex-col justify-center">
-
           <div className="flex items-center gap-3 mb-8">
-
             <div className="bg-green-600 text-white p-3 rounded-xl">
               <FaBriefcase size={25} />
             </div>
-
-            <h1 className="text-3xl font-bold text-white">
-              SkillGig
-            </h1>
-
+            <h1 className="text-3xl font-bold text-white">SkillGig</h1>
           </div>
 
           <h2 className="text-2xl font-bold text-white">
@@ -105,68 +97,51 @@ export default function AuthPage() {
           </h2>
 
           <p className="text-gray-300 mt-3">
-            Connect with companies, discover jobs,
-            and grow your career.
+            Connect with companies, discover jobs, and grow your career.
           </p>
 
           <div className="mt-6 space-y-3 text-gray-700">
-
             <div className="flex items-center gap-3 text-white">
-              <span className="bg-white p-2 rounded-lg text-green-600">
-                ✓
-              </span>
+              <span className="bg-white p-2 rounded-lg text-green-600">✓</span>
               Thousands of job opportunities
             </div>
-
             <div className="flex items-center gap-3 text-white">
-              <span className="bg-white p-2 rounded-lg text-green-600">
-                ✓
-              </span>
+              <span className="bg-white p-2 rounded-lg text-green-600">✓</span>
               Connect with companies
             </div>
-
           </div>
-
         </div>
 
         {/* FORM SIDE */}
-
         <div className="p-8">
-
           <div className="flex justify-center mb-6">
-
             <div className="bg-gray-100 rounded-full p-1">
-
               <button
+                type="button"
                 onClick={() => {
                   setIsLogin(true);
                   switchMode(true);
                 }}
-                className={`px-5 py-2 rounded-full ${
-                  isLogin
-                    ? "bg-green-600 text-white"
-                    : "text-gray-600"
+                className={`px-5 py-2 rounded-full cursor-pointer transition-colors ${
+                  isLogin ? "bg-green-600 text-white" : "text-gray-600"
                 }`}
               >
                 Login
               </button>
 
               <button
+                type="button"
                 onClick={() => {
                   setIsLogin(false);
                   switchMode(false);
                 }}
-                className={`px-5 py-2 rounded-full ${
-                  !isLogin
-                    ? "bg-green-600 text-white"
-                    : "text-gray-600"
+                className={`px-5 py-2 rounded-full cursor-pointer transition-colors ${
+                  !isLogin ? "bg-green-600 text-white" : "text-gray-600"
                 }`}
               >
                 Sign Up
               </button>
-
             </div>
-
           </div>
 
           <h2 className="text-2xl font-bold text-gray-900 text-center">
@@ -174,19 +149,13 @@ export default function AuthPage() {
           </h2>
 
           <p className="text-center text-gray-500 text-sm mt-2 mb-6">
-            {isLogin
-              ? "Login to continue to SkillGig"
-              : "Join SkillGig today"}
+            {isLogin ? "Login to continue to SkillGig" : "Join SkillGig today"}
           </p>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
-
             {!isLogin && (
-
               <div className="relative">
-
                 <FaUser className="absolute left-4 top-3.5 text-gray-400" />
-
                 <input
                   name="name"
                   value={formData.name}
@@ -194,15 +163,11 @@ export default function AuthPage() {
                   placeholder="Full name"
                   className="w-full border rounded-xl py-3 pl-11 outline-none focus:ring-2 focus:ring-green-500"
                 />
-
               </div>
-
             )}
 
             <div className="relative">
-
               <FaEnvelope className="absolute left-4 top-3.5 text-gray-400" />
-
               <input
                 onChange={handleChange}
                 name="email"
@@ -211,13 +176,10 @@ export default function AuthPage() {
                 type="email"
                 className="w-full border rounded-xl py-3 pl-11 outline-none focus:ring-2 focus:ring-green-500"
               />
-
             </div>
 
             <div className="relative">
-
               <FaLock className="absolute left-4 top-3.5 text-gray-400" />
-
               <input
                 name="password"
                 value={formData.password}
@@ -234,24 +196,18 @@ export default function AuthPage() {
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
-
             </div>
 
             <button
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold"
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold cursor-pointer"
               type="submit"
             >
               {isLogin ? "Login" : "Create Account"}
             </button>
-
           </form>
-
-          {/* Rest of your component stays exactly the same */}
-
         </div>
 
       </div>
-
     </div>
   );
 }
