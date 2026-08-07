@@ -28,21 +28,8 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-semibold text-base mb-5">For Candidates</h3>
             <ul className="flex flex-col gap-3 text-sm">
-              <li><a href="#" className="hover:text-green-500 transition">Browse Jobs</a></li>
-              <li><a href="#" className="hover:text-green-500 transition">Applied Jobs</a></li>
-              <li><a href="#" className="hover:text-green-500 transition">Build Resume</a></li>
-              <li><a href="#" className="hover:text-green-500 transition">Job Alerts</a></li>
-            </ul>
-          </div>
-
-          {/* For Employers */}
-          <div>
-            <h3 className="text-white font-semibold text-base mb-5">For Employers</h3>
-            <ul className="flex flex-col gap-3 text-sm">
-              <li><a href="#" className="hover:text-green-500 transition">Post a Job</a></li>
-              <li><a href="#" className="hover:text-green-500 transition">Browse Candidates</a></li>
-              <li><a href="#" className="hover:text-green-500 transition">Pricing Plans</a></li>
-              <li><a href="#" className="hover:text-green-500 transition">Talent Solutions</a></li>
+              <li><a href="/" className="hover:text-green-500 transition">Browse Jobs</a></li>
+              <li><a href="/applied" className="hover:text-green-500 transition">Applied Jobs</a></li>
             </ul>
           </div>
 

@@ -9,11 +9,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { name: "Overview" },
     { name: "Home", path: "/" },
-    { name: "Cover" },
-    { name: "Statistics" },
-    { name: "Contact" },
+    ...(user ? [{ name: "Applied Jobs", path: "/applied" }] : []),
   ];
 
   const handleNavClick = (path) => {
