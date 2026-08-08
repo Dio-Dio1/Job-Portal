@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../supabase.js";
-import jobs from "../data/jobs";
 
 const AppliedJobs = () => {
   const { user } = useAuth();
@@ -20,21 +19,34 @@ const AppliedJobs = () => {
       try {
         const { data, error } = await supabase
           .from("applications")
-          .select("job_id, applied_at")
+          .select(`
+            applied_at,
+            jobs (
+              id,
+              title,
+              company,
+              location,
+              salary,
+              logo_url
+            )
+          `)
           .eq("user_id", user.id)
           .order("applied_at", { ascending: false });
 
         if (error) throw error;
 
         if (data) {
-          // Map database application record to full job data
-          const mapped = data.map((app) => {
-            const jobDetails = jobs.find((j) => j.id === app.job_id);
-            return {
-              ...jobDetails,
+          const mapped = data
+            .filter((app) => app.jobs) // Filter out orphaned applications
+            .map((app) => ({
+              id: app.jobs.id,
+              title: app.jobs.title,
+              company: app.jobs.company,
+              location: app.jobs.location,
+              salary: app.jobs.salary,
+              logo_url: app.jobs.logo_url,
               appliedAt: new Date(app.applied_at).toLocaleDateString(),
-            };
-          }).filter(job => job.title); // Filter out any undefined jobs just in case
+            }));
 
           setAppliedJobs(mapped);
         }
@@ -66,7 +78,7 @@ const AppliedJobs = () => {
             <p className="text-gray-500 text-lg mb-4">You haven't applied for any jobs yet.</p>
             <button
               onClick={() => navigate("/")}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-medium transition"
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-medium transition cursor-pointer"
             >
               Browse Jobs
             </button>
@@ -79,12 +91,18 @@ const AppliedJobs = () => {
                 className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center shrink-0">
-                    <img
-                      src={job.logo}
-                      alt={job.title}
-                      className="w-11 h-11 rounded-lg object-cover"
-                    />
+                  <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
+                    {job.logo_url ? (
+                      <img
+                        src={job.logo_url}
+                        alt={job.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-lg font-bold text-green-700">
+                        {job.company?.[0]}
+                      </span>
+                    )}
                   </div>
                   <div>
                     <h2 className="text-lg font-semibold text-gray-900">{job.title}</h2>
@@ -103,7 +121,7 @@ const AppliedJobs = () => {
                   </span>
                   <button
                     onClick={() => navigate(`/jobs/${job.id}`)}
-                    className="flex-1 sm:flex-initial text-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium hover:bg-gray-100 transition"
+                    className="flex-1 sm:flex-initial text-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium hover:bg-gray-100 transition cursor-pointer"
                   >
                     View Details
                   </button>

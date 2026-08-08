@@ -7,6 +7,9 @@ import AuthPage from './components/AuthPage'
 import { Routes, Route } from "react-router-dom";
 import Jobdetails from './components/Jobdetails'
 import AppliedJobs from './components/AppliedJobs'
+import CompanyDashboard from './components/CompanyDashboard'
+import CreateEditJob from './components/CreateEditJob'
+import ManageApplicants from './components/ManageApplicants'
 import Footer from './components/Footer'
 import NotFound from './components/NotFound'
 
@@ -33,6 +36,11 @@ const App = () => {
           <Route path="/jobs/:id" element={<Jobdetails />} />
 
           <Route path="/applied" element={<AppliedJobs />} />
+
+          <Route path="/company" element={<CompanyDashboard />} />
+          <Route path="/company/jobs/new" element={<CreateEditJob />} />
+          <Route path="/company/jobs/:id/edit" element={<CreateEditJob />} />
+          <Route path="/company/jobs/:jobId/applicants" element={<ManageApplicants />} />
             
           <Route path="*" element={<NotFound />} />
         </Routes> 

@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import jobs from "../data/jobs";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../supabase.js";
 
@@ -8,20 +7,39 @@ const Jobdetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [job, setJob] = useState(null);
+  const [loadingJob, setLoadingJob] = useState(true);
   const [applied, setApplied] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const job = jobs.find((j) => j.id === Number(id));
+  const [loadingApply, setLoadingApply] = useState(false);
 
   useEffect(() => {
-    if (user && job) {
-      // Check if already applied
+    const fetchJobDetails = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("jobs")
+          .select("*")
+          .eq("id", Number(id))
+          .single();
+
+        if (error) throw error;
+        setJob(data);
+      } catch (err) {
+        console.error("Error fetching job details:", err.message);
+      } finally {
+        setLoadingJob(false);
+      }
+    };
+    fetchJobDetails();
+  }, [id]);
+
+  useEffect(() => {
+    if (user && id) {
       const checkApplication = async () => {
         const { data, error } = await supabase
           .from("applications")
           .select("id")
           .eq("user_id", user.id)
-          .eq("job_id", job.id)
+          .eq("job_id", Number(id))
           .maybeSingle();
 
         if (data) {
@@ -30,9 +48,7 @@ const Jobdetails = () => {
       };
       checkApplication();
     }
-  }, [user, job]);
-
-  if (!job) return <p className="text-center py-10">Job not found.</p>;
+  }, [user, id]);
 
   const handleApply = async () => {
     if (!user) {
@@ -41,11 +57,11 @@ const Jobdetails = () => {
       return;
     }
 
-    setLoading(true);
+    setLoadingApply(true);
     try {
       const { error } = await supabase
         .from("applications")
-        .insert([{ user_id: user.id, job_id: job.id }]);
+        .insert([{ user_id: user.id, job_id: job.id, status: "Pending" }]);
 
       if (error) throw error;
       setApplied(true);
@@ -53,9 +69,31 @@ const Jobdetails = () => {
     } catch (err) {
       alert(err.message || "Failed to submit application.");
     } finally {
-      setLoading(false);
+      setLoadingApply(false);
     }
   };
+
+  if (loadingJob) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-gray-600 text-lg">Loading job details...</p>
+      </div>
+    );
+  }
+
+  if (!job) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
+        <p className="text-gray-600 text-lg font-semibold">Job not found.</p>
+        <button
+          onClick={() => navigate("/")}
+          className="mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-xl transition"
+        >
+          Back to Home
+        </button>
+      </div>
+    );
+  }
 
   return (
     <section className="min-h-screen bg-gray-50 px-6 lg:px-20 py-16">
@@ -64,12 +102,18 @@ const Jobdetails = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
-            <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center">
-              <img
-                src={job.logo}
-                alt={job.title}
-                className="w-16 h-16 rounded-xl object-cover"
-              />
+            <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center overflow-hidden shrink-0">
+              {job.logo_url ? (
+                <img
+                  src={job.logo_url}
+                  alt={job.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-2xl font-bold text-green-700">
+                  {job.company?.[0]}
+                </span>
+              )}
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
@@ -81,17 +125,23 @@ const Jobdetails = () => {
             </div>
           </div>
 
-          <button
-            onClick={handleApply}
-            disabled={applied || loading}
-            className={`px-8 py-3 rounded-xl font-medium transition ${
-              applied
-                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                : "bg-green-600 hover:bg-green-700 text-white"
-            }`}
-          >
-            {loading ? "Applying..." : applied ? "Applied" : "Apply Now"}
-          </button>
+          {user?.user_metadata?.role === "company" ? (
+            <span className="text-gray-500 font-semibold bg-gray-100 px-5 py-3 rounded-xl text-sm">
+              Logged in as Employer
+            </span>
+          ) : (
+            <button
+              onClick={handleApply}
+              disabled={applied || loadingApply}
+              className={`px-8 py-3 rounded-xl font-medium transition cursor-pointer ${
+                applied
+                  ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-700 text-white"
+              }`}
+            >
+              {loadingApply ? "Applying..." : applied ? "Applied" : "Apply Now"}
+            </button>
+          )}
         </div>
 
         {/* Job Information */}
@@ -109,8 +159,20 @@ const Jobdetails = () => {
         {/* Description */}
         <div className="mt-10">
           <h2 className="text-xl font-bold text-gray-900">Job Description</h2>
-          <p className="text-gray-600 leading-7 mt-3">{job.description}</p>
+          <p className="text-gray-600 leading-7 mt-3 whitespace-pre-wrap">{job.description}</p>
         </div>
+
+        {/* Requirements */}
+        {job.requirements && job.requirements.length > 0 && (
+          <div className="mt-10 border-t border-gray-200 pt-8">
+            <h2 className="text-xl font-bold text-gray-900">Requirements</h2>
+            <ul className="list-disc list-inside text-gray-600 mt-3 space-y-2">
+              {job.requirements.map((req, index) => (
+                <li key={index}>{req}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* About Role */}
         <div className="mt-10 border-t border-gray-200 pt-8">
@@ -124,17 +186,23 @@ const Jobdetails = () => {
 
         {/* Bottom Button */}
         <div className="mt-10 flex justify-end">
-          <button
-            onClick={handleApply}
-            disabled={applied || loading}
-            className={`px-8 py-3 rounded-xl font-medium transition ${
-              applied
-                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                : "bg-gray-900 hover:bg-gray-800 text-white"
-            }`}
-          >
-            {loading ? "Applying..." : applied ? "Applied" : "Apply for this position"}
-          </button>
+          {user?.user_metadata?.role === "company" ? (
+            <span className="text-gray-500 font-semibold bg-gray-100 px-5 py-3 rounded-xl text-sm">
+              Logged in as Employer
+            </span>
+          ) : (
+            <button
+              onClick={handleApply}
+              disabled={applied || loadingApply}
+              className={`px-8 py-3 rounded-xl font-medium transition cursor-pointer ${
+                applied
+                  ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                  : "bg-gray-900 hover:bg-gray-800 text-white"
+              }`}
+            >
+              {loadingApply ? "Applying..." : applied ? "Applied" : "Apply for this position"}
+            </button>
+          )}
         </div>
 
       </div>

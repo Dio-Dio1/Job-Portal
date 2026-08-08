@@ -1,14 +1,34 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import trendingJobs from "../data/jobs";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../supabase.js";
 
 const Trends = ({ title, location }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [jobs, setJobs] = useState([]);
   const [appliedJobIds, setAppliedJobIds] = useState(new Set());
   const [applyingId, setApplyingId] = useState(null);
+  const [loadingJobs, setLoadingJobs] = useState(true);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("jobs")
+          .select("*")
+          .order("posted_at", { ascending: false });
+
+        if (error) throw error;
+        setJobs(data || []);
+      } catch (err) {
+        console.error("Error fetching jobs:", err.message);
+      } finally {
+        setLoadingJobs(false);
+      }
+    };
+    fetchJobs();
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -55,9 +75,9 @@ const Trends = ({ title, location }) => {
     }
   };
 
-  const filteredJobs = trendingJobs.filter((job) => {
-    const titleMatch = job.title.toLowerCase().includes(title.toLowerCase());
-    const locationMatch = job.location.toLowerCase().includes(location.toLowerCase());
+  const filteredJobs = jobs.filter((job) => {
+    const titleMatch = (job.title || "").toLowerCase().includes(title.toLowerCase());
+    const locationMatch = (job.location || "").toLowerCase().includes(location.toLowerCase());
     return titleMatch && locationMatch;
   });
 
@@ -72,78 +92,94 @@ const Trends = ({ title, location }) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        {filteredJobs.map((job) => {
-          const isApplied = appliedJobIds.has(job.id);
-          return (
-            <div
-              key={job.id}
-              className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
-            >
-              <div>
-                {/* Header */}
-                <div className="flex items-start justify-between">
-                  <div className="flex gap-3">
-                    <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center">
-                      <img
-                        src={job.logo}
-                        alt={job.title}
-                        className="w-11 h-11 rounded-lg object-cover"
-                      />
+      {loadingJobs ? (
+        <div className="text-center py-10 text-gray-600">Loading jobs...</div>
+      ) : filteredJobs.length === 0 ? (
+        <div className="text-center py-10 text-gray-600">No jobs found matching your search.</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          {filteredJobs.map((job) => {
+            const isApplied = appliedJobIds.has(job.id);
+            return (
+              <div
+                key={job.id}
+                className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  {/* Header */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex gap-3">
+                      <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
+                        {job.logo_url ? (
+                          <img
+                            src={job.logo_url}
+                            alt={job.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-lg font-bold text-green-700">
+                            {job.company?.[0]}
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        <h2 className="text-base font-semibold text-gray-900">
+                          {job.title}
+                        </h2>
+                        <p className="text-sm text-green-600 font-medium mt-1">
+                          {job.company}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="text-base font-semibold text-gray-900">
-                        {job.title}
-                      </h2>
-                      <p className="text-sm text-green-600 font-medium mt-1">
-                        {job.company}
-                      </p>
-                    </div>
+                    <span className="text-xs text-gray-400 font-medium">
+                      NEW
+                    </span>
                   </div>
-                  <span className="text-xs text-gray-400 font-medium">
-                    NEW
-                  </span>
+
+                  {/* Description */}
+                  <p className="mt-5 text-gray-600 leading-6 text-sm">
+                    {job.description}
+                  </p>
                 </div>
 
-                {/* Description */}
-                <p className="mt-5 text-gray-600 leading-6 text-sm">
-                  {job.description}
-                </p>
+                <div>
+                  {/* Job Info */}
+                  <div className="flex justify-between border-t border-gray-200 mt-5 pt-3 text-sm text-gray-500">
+                    <span>{job.location}</span>
+                    <span>{job.salary}</span>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex gap-3 mt-5 w-full">
+                    {user?.user_metadata?.role !== "company" && (
+                      <button
+                        onClick={() => handleApply(job.id)}
+                        disabled={isApplied || applyingId === job.id}
+                        className={`flex-1 py-2.5 rounded-xl font-medium transition cursor-pointer ${
+                          isApplied
+                            ? "bg-gray-200 text-gray-600 cursor-not-allowed"
+                            : "bg-green-600 hover:bg-green-700 text-white"
+                        }`}
+                      >
+                        {applyingId === job.id ? "Applying..." : isApplied ? "Applied" : "Apply"}
+                      </button>
+                    )}
+
+                    <button
+                      className={`py-2.5 border border-gray-300 rounded-xl hover:bg-gray-100 transition cursor-pointer text-center ${
+                        user?.user_metadata?.role === "company" ? "w-full" : "px-4"
+                      }`}
+                      onClick={() => navigate(`/jobs/${job.id}`)}
+                    >
+                      Details
+                    </button>
+                  </div>
+                </div>
               </div>
-
-              <div>
-                {/* Job Info */}
-                <div className="flex justify-between border-t border-gray-200 mt-5 pt-3 text-sm text-gray-500">
-                  <span>{job.location}</span>
-                  <span>{job.salary}</span>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex gap-3 mt-5">
-                  <button
-                    onClick={() => handleApply(job.id)}
-                    disabled={isApplied || applyingId === job.id}
-                    className={`flex-1 py-2.5 rounded-xl font-medium transition ${
-                      isApplied
-                        ? "bg-gray-200 text-gray-600 cursor-not-allowed"
-                        : "bg-green-600 hover:bg-green-700 text-white"
-                    }`}
-                  >
-                    {applyingId === job.id ? "Applying..." : isApplied ? "Applied" : "Apply"}
-                  </button>
-
-                  <button
-                    className="px-4 border border-gray-300 rounded-xl hover:bg-gray-100 transition"
-                    onClick={() => navigate(`/jobs/${job.id}`)}
-                  >
-                    Details
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 };

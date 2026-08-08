@@ -10,7 +10,11 @@ const Navbar = () => {
 
   const menuItems = [
     { name: "Home", path: "/" },
-    ...(user ? [{ name: "Applied Jobs", path: "/applied" }] : []),
+    ...(user && user.user_metadata?.role === "company"
+      ? [{ name: "Employer Dashboard", path: "/company" }]
+      : user
+      ? [{ name: "Applied Jobs", path: "/applied" }]
+      : []),
   ];
 
   const handleNavClick = (path) => {

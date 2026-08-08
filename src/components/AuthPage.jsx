@@ -21,6 +21,7 @@ export default function AuthPage() {
     name: "",
     email: "",
     password: "",
+    role: "seeker", // Default role
   });
 
   const handleChange = (e) => {
@@ -63,7 +64,7 @@ export default function AuthPage() {
       if (isLogin) {
         await login(formData.email, formData.password);
       } else {
-        await signup(formData.email, formData.password, formData.name);
+        await signup(formData.email, formData.password, formData.name, formData.role);
         alert("Registration successful! Please log in.");
         setIsLogin(true);
         return;
@@ -76,7 +77,7 @@ export default function AuthPage() {
 
   const switchMode = (mode) => {
     setIsLogin(mode);
-    setFormData({ name: "", email: "", password: "" });
+    setFormData({ name: "", email: "", password: "", role: "seeker" });
   };
 
   return (
@@ -154,16 +155,31 @@ export default function AuthPage() {
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             {!isLogin && (
-              <div className="relative">
-                <FaUser className="absolute left-4 top-3.5 text-gray-400" />
-                <input
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Full name"
-                  className="w-full border rounded-xl py-3 pl-11 outline-none focus:ring-2 focus:ring-green-500"
-                />
-              </div>
+              <>
+                <div className="relative">
+                  <FaUser className="absolute left-4 top-3.5 text-gray-400" />
+                  <input
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Full name"
+                    className="w-full border rounded-xl py-3 pl-11 outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">I want to register as a:</label>
+                  <select
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className="w-full border rounded-xl py-3 px-4 bg-white outline-none focus:ring-2 focus:ring-green-500 text-gray-700"
+                  >
+                    <option value="seeker">Job Seeker</option>
+                    <option value="company">Employer / Company</option>
+                  </select>
+                </div>
+              </>
             )}
 
             <div className="relative">
