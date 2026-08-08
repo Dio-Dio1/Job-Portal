@@ -17,6 +17,7 @@ const Trends = ({ title, location }) => {
         const { data, error } = await supabase
           .from("jobs")
           .select("*")
+          .not("company_id", "is", null)
           .order("posted_at", { ascending: false });
 
         if (error) throw error;

@@ -21,13 +21,15 @@ const AppliedJobs = () => {
           .from("applications")
           .select(`
             applied_at,
+            status,
             jobs (
               id,
               title,
               company,
               location,
               salary,
-              logo_url
+              logo_url,
+              company_id
             )
           `)
           .eq("user_id", user.id)
@@ -37,7 +39,7 @@ const AppliedJobs = () => {
 
         if (data) {
           const mapped = data
-            .filter((app) => app.jobs) // Filter out orphaned applications
+            .filter((app) => app.jobs && app.jobs.company_id !== null) // Filter out orphaned and seed applications
             .map((app) => ({
               id: app.jobs.id,
               title: app.jobs.title,
@@ -46,6 +48,7 @@ const AppliedJobs = () => {
               salary: app.jobs.salary,
               logo_url: app.jobs.logo_url,
               appliedAt: new Date(app.applied_at).toLocaleDateString(),
+              status: app.status || "Pending",
             }));
 
           setAppliedJobs(mapped);
@@ -116,8 +119,16 @@ const AppliedJobs = () => {
                 </div>
 
                 <div className="flex items-center gap-3 w-full sm:w-auto">
-                  <span className="text-xs bg-green-100 text-green-700 px-3 py-1.5 rounded-full font-medium">
-                    Applied
+                  <span
+                    className={`text-xs px-3 py-1.5 rounded-full font-medium ${
+                      job.status === "Accepted"
+                        ? "bg-green-100 text-green-700"
+                        : job.status === "Rejected"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {job.status}
                   </span>
                   <button
                     onClick={() => navigate(`/jobs/${job.id}`)}
