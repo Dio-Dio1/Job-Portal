@@ -115,10 +115,15 @@ const ManageApplicants = () => {
               >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold text-lg shrink-0">
-                    {app.user_id.substring(0, 2).toUpperCase()}
+                    {(app.applicant_name || app.applicant_email || app.user_id).substring(0, 2).toUpperCase()}
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Candidate #{app.user_id.substring(0, 6)}</div>
+                    <div className="font-semibold text-gray-900">
+                      {app.applicant_name || `Candidate #${app.user_id.substring(0, 6)}`}
+                    </div>
+                    {app.applicant_email && (
+                      <div className="text-sm text-gray-500">{app.applicant_email}</div>
+                    )}
                     <div className="text-xs text-gray-400 mt-1">
                       Applied on: {new Date(app.applied_at).toLocaleDateString()}
                     </div>

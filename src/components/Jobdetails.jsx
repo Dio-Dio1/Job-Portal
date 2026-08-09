@@ -61,7 +61,13 @@ const Jobdetails = () => {
     try {
       const { error } = await supabase
         .from("applications")
-        .insert([{ user_id: user.id, job_id: job.id, status: "Pending" }]);
+        .insert([{ 
+          user_id: user.id, 
+          job_id: job.id, 
+          status: "Pending",
+          applicant_name: user.user_metadata?.display_name || user.email?.split("@")[0] || "Anonymous",
+          applicant_email: user.email
+        }]);
 
       if (error) throw error;
       setApplied(true);
