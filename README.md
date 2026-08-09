@@ -43,9 +43,8 @@ Actively being built. Currently on the `rebuild-from-here` branch, implementing 
 - [x] Job detail page
 - [x] Statistics section
 - [x] Auth form with validation
-- [ ] Global auth state with Context
-- [ ] Protected routes
-- [ ] Job posting form
+- [x] Global auth state with Context
+- [x] Protected routes
+- [x] Job posting form
 - [ ] Mobile menu
-- [ ] Backend integration
-
+- [x] Backend integration
