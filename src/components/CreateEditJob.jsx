@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 import { supabase } from "../supabase.js";
 
 const CreateEditJob = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { addToast } = useToast();
   const isEditMode = !!id;
 
   const [loading, setLoading] = useState(isEditMode);
@@ -55,8 +57,7 @@ const CreateEditJob = () => {
             });
           }
         } catch (err) {
-          console.error("Error fetching job details:", err.message);
-          alert("Failed to load job posting or unauthorized access.");
+          addToast(err.message || "Failed to load job posting or unauthorized access.", "error");
           navigate("/company");
         } finally {
           setLoading(false);
@@ -75,7 +76,7 @@ const CreateEditJob = () => {
     e.preventDefault();
 
     if (!formData.title.trim() || !formData.company.trim() || !formData.description.trim()) {
-      alert("Job Title, Company Name, and Description are required.");
+      addToast("Job Title, Company Name, and Description are required.", "warning");
       return;
     }
 
@@ -109,15 +110,15 @@ const CreateEditJob = () => {
           .eq("company_id", user.id);
 
         if (error) throw error;
-        alert("Job updated successfully!");
+        addToast("Job updated successfully!", "success");
       } else {
         const { error } = await supabase.from("jobs").insert([payload]);
         if (error) throw error;
-        alert("Job posted successfully!");
+        addToast("Job posted successfully!", "success");
       }
       navigate("/company");
     } catch (err) {
-      alert(err.message || "Failed to save job posting.");
+      addToast(err.message || "Failed to save job posting.", "error");
     } finally {
       setSaving(false);
     }

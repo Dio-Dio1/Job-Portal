@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 import { supabase } from "../supabase.js";
+import ConfirmModal from "./ConfirmModal";
 
 const CompanyDashboard = () => {
   const { user } = useAuth();
+  const { addToast } = useToast();
   const navigate = useNavigate();
   const [postedJobs, setPostedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Confirm Modal state
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState(null);
 
   const fetchJobsAndApplicants = async () => {
     try {
@@ -38,7 +45,7 @@ const CompanyDashboard = () => {
         setPostedJobs(jobsWithApplicants);
       }
     } catch (err) {
-      console.error("Error fetching dashboard data:", err.message);
+      addToast(err.message || "Error fetching dashboard data.", "error");
     } finally {
       setLoading(false);
     }
@@ -52,18 +59,24 @@ const CompanyDashboard = () => {
     fetchJobsAndApplicants();
   }, [user, navigate]);
 
-  const handleDeleteJob = async (jobId) => {
-    if (!confirm("Are you sure you want to delete this job posting? All applications for this job will also be deleted.")) {
-      return;
-    }
+  const handleDeleteClick = (jobId) => {
+    setJobToDelete(jobId);
+    setIsConfirmOpen(true);
+  };
 
+  const handleConfirmDelete = async () => {
+    if (!jobToDelete) return;
+    
     try {
-      const { error } = await supabase.from("jobs").delete().eq("id", jobId);
+      const { error } = await supabase.from("jobs").delete().eq("id", jobToDelete);
       if (error) throw error;
-      setPostedJobs((prev) => prev.filter((j) => j.id !== jobId));
-      alert("Job deleted successfully!");
+      setPostedJobs((prev) => prev.filter((j) => j.id !== jobToDelete));
+      addToast("Job deleted successfully!", "success");
     } catch (err) {
-      alert(err.message || "Failed to delete job.");
+      addToast(err.message || "Failed to delete job.", "error");
+    } finally {
+      setIsConfirmOpen(false);
+      setJobToDelete(null);
     }
   };
 
@@ -150,7 +163,7 @@ const CompanyDashboard = () => {
                         </button>
                         <span>•</span>
                         <button
-                          onClick={() => handleDeleteJob(job.id)}
+                          onClick={() => handleDeleteClick(job.id)}
                           className="text-red-600 hover:text-red-800 font-medium cursor-pointer"
                         >
                           Delete
@@ -164,6 +177,17 @@ const CompanyDashboard = () => {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        title="Delete Job Posting?"
+        message="Are you sure you want to delete this job posting? All applications for this job will also be deleted. This action cannot be undone."
+        onConfirm={handleConfirmDelete}
+        onCancel={() => {
+          setIsConfirmOpen(false);
+          setJobToDelete(null);
+        }}
+      />
     </section>
   );
 };

@@ -1,16 +1,19 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 import { supabase } from "../supabase.js";
+import ApplyModal from "./ApplyModal";
 
 const Jobdetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { addToast } = useToast();
   const [job, setJob] = useState(null);
   const [loadingJob, setLoadingJob] = useState(true);
   const [applied, setApplied] = useState(false);
-  const [loadingApply, setLoadingApply] = useState(false);
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -24,7 +27,7 @@ const Jobdetails = () => {
         if (error) throw error;
         setJob(data);
       } catch (err) {
-        console.error("Error fetching job details:", err.message);
+        addToast(err.message || "Error fetching job details.", "error");
       } finally {
         setLoadingJob(false);
       }
@@ -50,33 +53,13 @@ const Jobdetails = () => {
     }
   }, [user, id]);
 
-  const handleApply = async () => {
+  const handleApplyClick = () => {
     if (!user) {
-      alert("Please login to apply for this job.");
+      addToast("Please login to apply for this job.", "warning");
       navigate("/auth");
       return;
     }
-
-    setLoadingApply(true);
-    try {
-      const { error } = await supabase
-        .from("applications")
-        .insert([{ 
-          user_id: user.id, 
-          job_id: job.id, 
-          status: "Pending",
-          applicant_name: user.user_metadata?.display_name || user.email?.split("@")[0] || "Anonymous",
-          applicant_email: user.email
-        }]);
-
-      if (error) throw error;
-      setApplied(true);
-      alert("Application submitted successfully!");
-    } catch (err) {
-      alert(err.message || "Failed to submit application.");
-    } finally {
-      setLoadingApply(false);
-    }
+    setIsApplyModalOpen(true);
   };
 
   if (loadingJob) {
@@ -137,15 +120,15 @@ const Jobdetails = () => {
             </span>
           ) : (
             <button
-              onClick={handleApply}
-              disabled={applied || loadingApply}
+              onClick={handleApplyClick}
+              disabled={applied}
               className={`px-8 py-3 rounded-xl font-medium transition cursor-pointer ${
                 applied
                   ? "bg-gray-300 text-gray-600 cursor-not-allowed"
                   : "bg-green-600 hover:bg-green-700 text-white"
               }`}
             >
-              {loadingApply ? "Applying..." : applied ? "Applied" : "Apply Now"}
+              {applied ? "Applied" : "Apply Now"}
             </button>
           )}
         </div>
@@ -198,20 +181,29 @@ const Jobdetails = () => {
             </span>
           ) : (
             <button
-              onClick={handleApply}
-              disabled={applied || loadingApply}
+              onClick={handleApplyClick}
+              disabled={applied}
               className={`px-8 py-3 rounded-xl font-medium transition cursor-pointer ${
                 applied
                   ? "bg-gray-300 text-gray-600 cursor-not-allowed"
                   : "bg-gray-900 hover:bg-gray-800 text-white"
               }`}
             >
-              {loadingApply ? "Applying..." : applied ? "Applied" : "Apply for this position"}
+              {applied ? "Applied" : "Apply for this position"}
             </button>
           )}
         </div>
 
       </div>
+
+      <ApplyModal
+        isOpen={isApplyModalOpen}
+        onClose={() => setIsApplyModalOpen(false)}
+        jobId={job.id}
+        jobTitle={job.title}
+        companyName={job.company}
+        onSuccess={() => setApplied(true)}
+      />
     </section>
   );
 };

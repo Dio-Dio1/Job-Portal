@@ -1,15 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 import { supabase } from "../supabase.js";
+import ApplyModal from "./ApplyModal";
 
 const Trends = ({ title, location }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { addToast } = useToast();
   const [jobs, setJobs] = useState([]);
   const [appliedJobIds, setAppliedJobIds] = useState(new Set());
-  const [applyingId, setApplyingId] = useState(null);
   const [loadingJobs, setLoadingJobs] = useState(true);
+  
+  // Apply Modal state
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -23,7 +29,7 @@ const Trends = ({ title, location }) => {
         if (error) throw error;
         setJobs(data || []);
       } catch (err) {
-        console.error("Error fetching jobs:", err.message);
+        addToast(err.message || "Error fetching jobs.", "error");
       } finally {
         setLoadingJobs(false);
       }
@@ -49,36 +55,22 @@ const Trends = ({ title, location }) => {
     }
   }, [user]);
 
-  const handleApply = async (jobId) => {
+  const handleApplyClick = (job) => {
     if (!user) {
-      alert("Please login to apply for this job.");
+      addToast("Please login to apply for this job.", "warning");
       navigate("/auth");
       return;
     }
+    setSelectedJob(job);
+    setIsApplyModalOpen(true);
+  };
 
-    setApplyingId(jobId);
-    try {
-      const { error } = await supabase
-        .from("applications")
-        .insert([{ 
-          user_id: user.id, 
-          job_id: jobId,
-          applicant_name: user.user_metadata?.display_name || user.email?.split("@")[0] || "Anonymous",
-          applicant_email: user.email
-        }]);
-
-      if (error) throw error;
-      setAppliedJobIds((prev) => {
-        const updated = new Set(prev);
-        updated.add(jobId);
-        return updated;
-      });
-      alert("Application submitted successfully!");
-    } catch (err) {
-      alert(err.message || "Failed to submit application.");
-    } finally {
-      setApplyingId(null);
-    }
+  const handleApplySuccess = (jobId) => {
+    setAppliedJobIds((prev) => {
+      const updated = new Set(prev);
+      updated.add(jobId);
+      return updated;
+    });
   };
 
   const filteredJobs = jobs.filter((job) => {
@@ -159,15 +151,15 @@ const Trends = ({ title, location }) => {
                   <div className="flex gap-3 mt-5 w-full">
                     {user?.user_metadata?.role !== "company" && (
                       <button
-                        onClick={() => handleApply(job.id)}
-                        disabled={isApplied || applyingId === job.id}
+                        onClick={() => handleApplyClick(job)}
+                        disabled={isApplied}
                         className={`flex-1 py-2.5 rounded-xl font-medium transition cursor-pointer ${
                           isApplied
                             ? "bg-gray-200 text-gray-600 cursor-not-allowed"
                             : "bg-green-600 hover:bg-green-700 text-white"
                         }`}
                       >
-                        {applyingId === job.id ? "Applying..." : isApplied ? "Applied" : "Apply"}
+                        {isApplied ? "Applied" : "Apply"}
                       </button>
                     )}
 
@@ -185,6 +177,20 @@ const Trends = ({ title, location }) => {
             );
           })}
         </div>
+      )}
+
+      {selectedJob && (
+        <ApplyModal
+          isOpen={isApplyModalOpen}
+          onClose={() => {
+            setIsApplyModalOpen(false);
+            setSelectedJob(null);
+          }}
+          jobId={selectedJob.id}
+          jobTitle={selectedJob.title}
+          companyName={selectedJob.company}
+          onSuccess={() => handleApplySuccess(selectedJob.id)}
+        />
       )}
     </section>
   );

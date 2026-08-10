@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 import {
   FaBriefcase,
   FaUser,
@@ -16,6 +17,7 @@ export default function AuthPage() {
 
   const navigate = useNavigate();
   const { login, signup } = useAuth();
+  const { addToast } = useToast();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -56,22 +58,23 @@ export default function AuthPage() {
     const errors = validation();
 
     if (errors.length > 0) {
-      alert(errors.join("\n"));
+      errors.forEach((err) => addToast(err, "error"));
       return;
     }
 
     try {
       if (isLogin) {
         await login(formData.email, formData.password);
+        addToast("Logged in successfully!", "success");
       } else {
         await signup(formData.email, formData.password, formData.name, formData.role);
-        alert("Registration successful! Please log in.");
+        addToast("Registration successful! Please log in.", "success");
         setIsLogin(true);
         return;
       }
       navigate("/");
     } catch (error) {
-      alert(error.message || "An authentication error occurred.");
+      addToast(error.message || "An authentication error occurred.", "error");
     }
   };
 
