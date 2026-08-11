@@ -10,11 +10,6 @@ const AppliedJobs = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
-
     const fetchAppliedJobs = async () => {
       try {
         const { data, error } = await supabase

@@ -12,6 +12,7 @@ import CreateEditJob from './components/CreateEditJob'
 import ManageApplicants from './components/ManageApplicants'
 import Footer from './components/Footer'
 import NotFound from './components/NotFound'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const App = () => {
   const [title, setTitle] = useState("")
@@ -35,12 +36,32 @@ const App = () => {
 
           <Route path="/jobs/:id" element={<Jobdetails />} />
 
-          <Route path="/applied" element={<AppliedJobs />} />
+          <Route path="/applied" element={
+            <ProtectedRoute allowedRole="seeker">
+              <AppliedJobs />
+            </ProtectedRoute>
+          } />
 
-          <Route path="/company" element={<CompanyDashboard />} />
-          <Route path="/company/jobs/new" element={<CreateEditJob />} />
-          <Route path="/company/jobs/:id/edit" element={<CreateEditJob />} />
-          <Route path="/company/jobs/:jobId/applicants" element={<ManageApplicants />} />
+          <Route path="/company" element={
+            <ProtectedRoute allowedRole="company">
+              <CompanyDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/company/jobs/new" element={
+            <ProtectedRoute allowedRole="company">
+              <CreateEditJob />
+            </ProtectedRoute>
+          } />
+          <Route path="/company/jobs/:id/edit" element={
+            <ProtectedRoute allowedRole="company">
+              <CreateEditJob />
+            </ProtectedRoute>
+          } />
+          <Route path="/company/jobs/:jobId/applicants" element={
+            <ProtectedRoute allowedRole="company">
+              <ManageApplicants />
+            </ProtectedRoute>
+          } />
             
           <Route path="*" element={<NotFound />} />
         </Routes> 

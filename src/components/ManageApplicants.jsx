@@ -55,10 +55,6 @@ const ManageApplicants = () => {
   };
 
   useEffect(() => {
-    if (!user || user.user_metadata?.role !== "company") {
-      navigate("/");
-      return;
-    }
     fetchData();
   }, [jobId, user, navigate]);
 

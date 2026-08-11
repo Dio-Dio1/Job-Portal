@@ -52,10 +52,6 @@ const CompanyDashboard = () => {
   };
 
   useEffect(() => {
-    if (!user || user.user_metadata?.role !== "company") {
-      navigate("/");
-      return;
-    }
     fetchJobsAndApplicants();
   }, [user, navigate]);
 
