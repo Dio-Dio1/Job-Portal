@@ -80,7 +80,7 @@ const Trends = ({ title, location }) => {
   });
 
   return (
-    <section className="px-6 lg:px-20 py-16 bg-gray-50">
+    <section id="trending-jobs" className="px-6 lg:px-20 py-16 bg-gray-50">
       <div className="mb-10">
         <h1 className="text-4xl lg:text-5xl font-bold text-gray-900">
           Trending Jobs Right Now

@@ -15,7 +15,7 @@ const CreateEditJob = () => {
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
-    company: "",
+    company: user?.user_metadata?.display_name || user?.email?.split("@")[0] || "",
     location: "",
     salary: "",
     description: "",

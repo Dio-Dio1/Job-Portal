@@ -48,8 +48,13 @@ const Landing = ({setLocation, setTitle, title, location}) => {
           />
 
 
-          <button className='m-2 px-7 py-2.5 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition'
-          onClick={()=>{console.log(title, location)}}
+          <button className='m-2 px-7 py-2.5 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition cursor-pointer'
+          onClick={()=>{
+            const element = document.getElementById("trending-jobs");
+            if (element) {
+              element.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
           >
             Search
           </button>
