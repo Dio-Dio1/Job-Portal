@@ -15,6 +15,7 @@ const Navbar = () => {
       : user
       ? [{ name: "Applied Jobs", path: "/applied" }]
       : []),
+    ...(user ? [{ name: "Profile", path: "/profile" }] : []),
   ];
 
   const handleNavClick = (path) => {

@@ -13,6 +13,8 @@ import ManageApplicants from './components/ManageApplicants'
 import Footer from './components/Footer'
 import NotFound from './components/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
+import Profile from './components/Profile'
+
 
 const App = () => {
   const [title, setTitle] = useState("")
@@ -60,6 +62,11 @@ const App = () => {
           <Route path="/company/jobs/:jobId/applicants" element={
             <ProtectedRoute allowedRole="company">
               <ManageApplicants />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           } />
             
