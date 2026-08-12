@@ -12,15 +12,15 @@ const Statistics = () => {
           <div className="w-full lg:w-48 text-center lg:text-left border-b lg:border-b-0 lg:border-r border-white/20 pb-6 lg:pb-0 lg:pr-10">
 
             <h1 className="text-4xl font-bold tracking-tight">
-              25K+
+              100%
             </h1>
 
             <h1 className="mt-1 text-base font-medium text-white/80">
-              Active
+              Responsive
             </h1>
 
             <h1 className="text-base font-medium text-white/80">
-              Users
+              UI
             </h1>
 
           </div>
@@ -32,15 +32,15 @@ const Statistics = () => {
           <div className="w-full lg:w-48 text-center lg:text-left border-b lg:border-b-0 lg:border-r border-white/20 pb-6 lg:pb-0 lg:pr-10">
 
             <h1 className="text-4xl font-bold tracking-tight">
-              9.6K+
+              1-CLick
             </h1>
 
             <h1 className="mt-1 text-base font-medium text-white/80">
-              Jobs
+              Fast 
             </h1>
 
             <h1 className="text-base font-medium text-white/80">
-              Posted
+              Apply
             </h1>
 
           </div>
@@ -52,15 +52,15 @@ const Statistics = () => {
           <div className="w-full lg:w-48 text-center lg:text-left border-b sm:border-b-0 lg:border-r border-white/20 pb-6 lg:pb-0 lg:pr-10">
 
             <h1 className="text-4xl font-bold tracking-tight">
-              120+
+              100%
             </h1>
 
             <h1 className="mt-1 text-base font-medium text-white/80">
-              Companies
+              Free
             </h1>
 
             <h1 className="text-base font-medium text-white/80">
-              Hiring
+              Access
             </h1>
 
           </div>
@@ -72,15 +72,15 @@ const Statistics = () => {
           <div className="w-full lg:w-48 text-center lg:text-left">
 
             <h1 className="text-4xl font-bold tracking-tight">
-              2.4K+
+              24/7
             </h1>
 
             <h1 className="mt-1 text-base font-medium text-white/80">
-              Successful
+              Platform
             </h1>
 
             <h1 className="text-base font-medium text-white/80">
-              Hires
+              Access
             </h1>
 
           </div>
