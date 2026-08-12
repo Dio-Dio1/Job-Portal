@@ -16,7 +16,7 @@ const ProtectedRoute = ({ children, allowedRole }) => {
     return <Navigate to="/auth" replace />;
   }
 
-  const role = user.user_metadata?.role;
+  const role = user.user_metadata?.role || "seeker";
   if (allowedRole && role !== allowedRole) {
     return <Navigate to="/" replace />;
   }

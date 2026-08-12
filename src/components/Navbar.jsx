@@ -56,7 +56,7 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             {user ? (
               <>
-                <span className="font-semibold text-gray-700">{user?.name}</span>
+                <span className="font-semibold text-gray-700">{user?.user_metadata?.display_name || user?.email}</span>
                 <button
                   onClick={logout}
                   className="rounded-full px-6 py-2.5 bg-red-600 text-white shadow-md transition-all duration-300 hover:bg-red-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95 cursor-pointer"
@@ -125,7 +125,7 @@ const Navbar = () => {
             {user ? (
               <>
                 <div className="text-gray-600 mb-2">
-                  Logged in as: <span className="font-bold text-gray-900">{user?.name}</span>
+                  Logged in as: <span className="font-bold text-gray-900">{user?.user_metadata?.display_name || user?.email}</span>
                 </div>
                 <button
                   onClick={() => {
