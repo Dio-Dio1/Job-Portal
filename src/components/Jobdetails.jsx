@@ -108,7 +108,15 @@ const Jobdetails = () => {
               <h1 className="text-3xl font-bold text-gray-900">
                 {job.title}
               </h1>
-              <p className="text-green-600 font-semibold mt-1">
+              <p 
+                onClick={() => {
+                  if (job.company_id) {
+                    navigate(`/profiles/company/${job.company_id}`);
+                  }
+                }}
+                className="text-green-700 font-bold mt-1 hover:underline hover:text-green-800 cursor-pointer transition"
+                title="Click to view company profile"
+              >
                 {job.company}
               </p>
             </div>

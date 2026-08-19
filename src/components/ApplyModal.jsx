@@ -47,6 +47,12 @@ const ApplyModal = ({ isOpen, onClose, jobId, jobTitle, companyName, onSuccess }
 
     setSubmitting(true);
     try {
+      const title = user.user_metadata?.title || "Candidate";
+      const bio = user.user_metadata?.bio || "";
+      const skills = user.user_metadata?.skills || "";
+      const profileData = { title, bio, skills };
+      const formattedCoverMessage = `__PROFILE_DATA__:${JSON.stringify(profileData)}__END_PROFILE_DATA__\n${formData.coverMessage}`;
+
       const { error } = await supabase
         .from("applications")
         .insert([{
@@ -55,7 +61,7 @@ const ApplyModal = ({ isOpen, onClose, jobId, jobTitle, companyName, onSuccess }
           status: "Pending",
           applicant_name: user.user_metadata?.display_name || user.email?.split("@")[0] || "Anonymous",
           applicant_email: user.email,
-          cover_message: formData.coverMessage,
+          cover_message: formattedCoverMessage,
           resume_url: formData.resumeUrl,
           github_url: formData.githubUrl,
           linkedin_url: formData.linkedinUrl,

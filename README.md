@@ -22,6 +22,7 @@ Actively being built. Currently on the `rebuild-from-here` branch, implementing 
 - Tailwind CSS
 - React Router DOM
 - React Icons
+- Supabase
 
 ## React Concepts Covered So Far
 
@@ -46,5 +47,5 @@ Actively being built. Currently on the `rebuild-from-here` branch, implementing 
 - [x] Global auth state with Context
 - [x] Protected routes
 - [x] Job posting form
-- [ ] Mobile menu
+- [x] Mobile menu
 - [x] Backend integration

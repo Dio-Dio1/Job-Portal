@@ -14,6 +14,19 @@ const ManageApplicants = () => {
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const parseCoverMessage = (coverMessage) => {
+    if (!coverMessage) return { profile: null, message: "" };
+    const match = coverMessage.match(/__PROFILE_DATA__:(.*?)__END_PROFILE_DATA__/s);
+    if (match) {
+      try {
+        const profile = JSON.parse(match[1]);
+        const message = coverMessage.replace(/__PROFILE_DATA__:.*?__END_PROFILE_DATA__\s*/s, "");
+        return { profile, message };
+      } catch (e) {}
+    }
+    return { profile: null, message: coverMessage };
+  };
+
   const fetchData = async () => {
     try {
       // 1. Verify job exists and belongs to the company
@@ -117,7 +130,11 @@ const ManageApplicants = () => {
                       {(app.applicant_name || app.applicant_email || app.user_id).substring(0, 2).toUpperCase()}
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">
+                      <div 
+                        onClick={() => navigate(`/profiles/seeker/${app.user_id}`)}
+                        className="font-bold text-gray-900 hover:text-green-700 hover:underline cursor-pointer transition text-base"
+                        title="Click to view candidate profile"
+                      >
                         {app.applicant_name || `Candidate #${app.user_id.substring(0, 6)}`}
                       </div>
                       {app.applicant_email && (
@@ -162,16 +179,35 @@ const ManageApplicants = () => {
                 </div>
 
                 {/* Additional seeker metadata fields */}
-                {(app.cover_message || app.resume_url || app.github_url || app.linkedin_url) && (
-                  <div className="border-t border-gray-100 pt-4 mt-2 space-y-3">
-                    {app.cover_message && (
-                      <div>
-                        <span className="text-xs font-semibold text-gray-500 block mb-1">Cover Message:</span>
-                        <p className="text-sm text-gray-700 leading-relaxed bg-gray-50 p-3.5 rounded-xl whitespace-pre-wrap">
-                          {app.cover_message}
-                        </p>
-                      </div>
-                    )}
+                {(() => {
+                  const { profile, message } = parseCoverMessage(app.cover_message);
+                  return (
+                    (message || profile || app.resume_url || app.github_url || app.linkedin_url) && (
+                      <div className="border-t border-gray-100 pt-4 mt-2 space-y-3">
+                        {profile && (
+                          <div className="bg-green-50/50 border border-green-100 p-3.5 rounded-xl">
+                            <span className="text-xs font-semibold text-green-800 block mb-1">Candidate Profile Summary:</span>
+                            <div className="text-sm font-bold text-gray-900 mb-1">{profile.title}</div>
+                            {profile.skills && (
+                              <div className="flex flex-wrap gap-1.5 mt-2">
+                                {profile.skills.split(",").map((s, idx) => (
+                                  <span key={idx} className="bg-white text-green-700 border border-green-150 px-2 py-0.5 rounded-md text-xs font-medium">
+                                    {s.trim()}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {message && (
+                          <div>
+                            <span className="text-xs font-semibold text-gray-500 block mb-1">Cover Message:</span>
+                            <p className="text-sm text-gray-700 leading-relaxed bg-gray-50 p-3.5 rounded-xl whitespace-pre-wrap">
+                              {message}
+                            </p>
+                          </div>
+                        )}
 
                     <div className="flex flex-wrap gap-3">
                       {app.resume_url && (
@@ -206,9 +242,11 @@ const ManageApplicants = () => {
                       )}
                     </div>
                   </div>
-                )}
-              </div>
-            ))}
+                )
+              );
+            })()}
+          </div>
+        ))}
           </div>
         )}
       </div>
