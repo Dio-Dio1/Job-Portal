@@ -6,6 +6,17 @@ A job portal built with React as a learning project. Focused on understanding Re
 
 Actively being built. Currently on the `rebuild-from-here` branch, implementing the MVP feature by feature with a focus on understanding React concepts rather than shipping fast. Previous implementation preserved in `archive/full-feature`.
 
+## Demo Accounts (Quick Testing)
+
+To test the different roles (Job Seeker dashboard vs Employer job management dashboard) instantly, you can log in using these pre-registered demo accounts:
+
+* **Job Seeker Demo:**
+  * **Email:** `seeker@demo.com`
+  * **Password:** `password123`
+* **Employer / Company Demo:**
+  * **Email:** `company@demo.com`
+  * **Password:** `password123`
+
 ## Features
 
 - Landing page with live search (controlled inputs)
