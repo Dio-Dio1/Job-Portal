@@ -81,9 +81,14 @@ export default function AuthPage() {
         addToast("Logged in successfully!", "success");
         navigate("/");
       } else {
-        await signup(formData.email, formData.password, formData.name, formData.role);
-        setVerificationRequired(true);
-        addToast("Registration successful! Please check your email to verify.", "success");
+        const data = await signup(formData.email, formData.password, formData.name, formData.role);
+        if (data?.session) {
+          addToast("Registration successful! Logged in successfully.", "success");
+          navigate("/");
+        } else {
+          setVerificationRequired(true);
+          addToast("Registration successful! Please check your email to verify.", "success");
+        }
       }
     } catch (error) {
       addToast(error.message || "An authentication error occurred.", "error");
