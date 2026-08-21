@@ -321,13 +321,13 @@ export default function AuthPage() {
                   <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-600 flex justify-center gap-6">
                     <div className="text-center">
                       <p className="font-bold text-gray-800 mb-1">Demo Seeker</p>
-                      <p className="font-mono text-xs">seeker@gmail.com</p>
+                      <p className="font-mono text-xs">seeker@demo.com</p>
                       <p className="font-mono text-xs mt-0.5">password123</p>
                     </div>
                     <div className="border-l border-gray-300"></div>
                     <div className="text-center">
                       <p className="font-bold text-gray-800 mb-1">Demo Company</p>
-                      <p className="font-mono text-xs">company@gmail.com</p>
+                      <p className="font-mono text-xs">company@demo.com</p>
                       <p className="font-mono text-xs mt-0.5">password123</p>
                     </div>
                   </div>
